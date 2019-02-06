@@ -1,0 +1,22 @@
+.jumbotron {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin: .5rem 0rem;
+    background-color: #cfe2e6;
+    border-radius: 0rem !important;
+    padding: .5rem 0rem !important;
+}
+
+.btn-secondary.focus,
+.btn-secondary:focus {
+  box-shadow: none !important;
+}
+
+.display-3 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1;
+  }

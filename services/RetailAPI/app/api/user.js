@@ -19,19 +19,19 @@ api.signup = (User) => (req, res) => {
 }
 
 // для отладки
-api.setup = (User) => (req, res) => {
-  console.log('setup adm')
-  const admin = new User({
-    username: 'admin',
-    password: 'admin',
-    clients: []
-  });
-admin.save(error => {
-    if (error) throw error;
-console.log('Admin account was succesfully set up');
-    res.json({ success: true });
-  })
-}
+// api.setup = (User) => (req, res) => {
+//   console.log('setup adm')
+//   const admin = new User({
+//     username: 'admin',
+//     password: 'admin',
+//     clients: []
+//   });
+// admin.save(error => {
+//     if (error) throw error;
+// console.log('Admin account was succesfully set up');
+//     res.json({ success: true });
+//   })
+// }
 
 api.index = (User, BudgetToken) => (req, res) => {
   const token = BudgetToken;
