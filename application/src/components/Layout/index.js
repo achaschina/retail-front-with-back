@@ -18,7 +18,7 @@ export default {
           observer.error(error);
         });
     });
-    let subscription = observable$.subscribe({
+    observable$.subscribe({
       next: (data) => {
         console.log('[data] => ', data);
         context.$cookie.set('token', data.token, '1D')
@@ -54,7 +54,7 @@ export default {
         });
     });
 
-    let subscription = observable$.subscribe({
+    observable$.subscribe({
       next: (data) => {
         console.log('[data] => ', data);
         context.validSignUp = true
