@@ -1,8 +1,5 @@
 import Axios from 'axios'
-import {
-  Observable
-} from 'rxjs';
-import router from '../../utilities/router/index'
+import { Observable } from 'rxjs';
 const BudgetManagerAPI = `http://${window.location.hostname}:3001`
 
 export default {
@@ -46,30 +43,39 @@ export default {
   },
 
   signup(context, credentials, redirect) {
-    Axios.post(`${BudgetManagerAPI}/api/v1/signup`, credentials)
-      .then(({
-        data: {
-          token
-        }
-      }) => {
-        context.$cookie.set('token', token, '1D')
+    let observable$ = Observable.create((observer) => {
+      Axios.post(`${BudgetManagerAPI}/api/v1/signup`, credentials)
+        .then((response) => {
+          observer.next(response.data);
+          observer.complete();
+        })
+        .catch((error) => {
+          observer.error(error);
+        });
+    });
+
+    let subscription = observable$.subscribe({
+      next: (data) => {
+        console.log('[data] => ', data);
         context.validSignUp = true
         this.user.authenticated = true
-        console.log({
-          data: {
-            token
-          }
-        })
-
-        if (redirect) router.push(redirect)
-      }).catch(({
-        response: {
-          data
+        if (data.success) {
+          context.$refs.myModalRef.hide();
+          context.wrongCredentialAlert = '';
+          context.messegeAlert = data.message
+          context.dismissCountDown = context.dismissSecs
+          this.authenticate(context, credentials, redirect)
         }
-      }) => {
-        context.snackbar = true
-        context.message = data.message
-      })
+      },
+      error: (err) => {
+        console.log(err)
+        context.wrongCredentialAlert = 'Не вдалось зареєструвати користувача'
+        context.dismissCountDown = context.dismissSecs
+      },
+      complete: (data) => {
+        console.log('[complete]');
+      }
+    });
   },
 
   checkAuthentication() {
