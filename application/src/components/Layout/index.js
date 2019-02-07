@@ -29,6 +29,7 @@ export default {
           context.wrongCredentialAlert = '';
           context.messegeAlert = data.message
           context.dismissCountDown = context.dismissSecs
+          context.currentUserName = data.user.username
         }
       },
       error: (err) => {

@@ -29,7 +29,7 @@
           <b-nav-item-dropdown right>
             <!-- Using button-content slot -->
             <template slot="button-content">
-              <em>userName</em>
+              <em>{{currentUserName}}</em>
             </template>
             <b-dropdown-item href="#">Profile</b-dropdown-item>
             <b-dropdown-item to="cart">Корзина</b-dropdown-item>
@@ -39,9 +39,10 @@
       </b-collapse>
     </b-navbar>
 
-    <b-modal ref="myModalRef" hide-footer  title id="auth" no-close-on-backdrop>
+    <b-modal ref="myModalRef" hide-footer title id="auth" no-close-on-backdrop>
       <b-form>
         <div v-if="!signUpVisible">
+          <h6>Форма аутенитифікаціі</h6>
           <b-form-group
             id="exampleInputGroup1"
             label="Username"
@@ -66,11 +67,13 @@
             ></b-form-input>
           </b-form-group>
           <p>{{wrongCredentialAlert}}</p>
-          <b-button variant="primary" @click="submitAuthentication()">Логін</b-button>
-          <b-button variant="primary" @click="signUpVisible = true">Реєстрація</b-button>
-          <!-- <b-button type="reset" variant="danger">Reset</b-button> -->
+          <div class="buttons-wrap">
+            <b-button variant="link" @click="signUpVisible = !signUpVisible">Створити аккаунт</b-button>
+            <b-button variant="primary" @click="submitAuthentication()">Увійти</b-button>
+          </div>
         </div>
         <div v-if="signUpVisible">
+          <h6>Форма реєстрації</h6>
           <b-form-group
             id="exampleInputGroup1"
             label="Username"
@@ -94,32 +97,38 @@
               placeholder="Enter password"
             ></b-form-input>
           </b-form-group>
-          <b-button variant="primary" @click="submitSignUp()">Створити акаунт</b-button>
+          <div class="buttons-wrap">
+            <b-button variant="link" @click="signUpVisible = !signUpVisible">Увійти</b-button>
+            <b-button variant="primary" @click="submitSignUp()">Створити акаунт</b-button>
+          </div>
         </div>
       </b-form>
     </b-modal>
 
-    <b-alert :show="dismissCountDown"
-             dismissible
-             variant="warning"
-             @dismissed="dismissCountDown=0"
-             @dismiss-count-down="countDownChanged">
+    <b-alert
+      :show="dismissCountDown"
+      dismissible
+      variant="warning"
+      @dismissed="dismissCountDown=0"
+      @dismiss-count-down="countDownChanged"
+    >
       <p>{{messegeAlert}}</p>
     </b-alert>
   </div>
 </template>
 
 <script>
-import Authentication from './index.js'
+import Authentication from "./index.js";
 export default {
   data() {
     return {
+      currentUserName: "",
       snackbar: false,
       signUpVisible: false,
       dismissSecs: 5,
       dismissCountDown: 0,
-      messegeAlert: '',
-      wrongCredentialAlert:'',
+      messegeAlert: "",
+      wrongCredentialAlert: "",
       form: {
         credentials: {
           username: "",
@@ -142,33 +151,21 @@ export default {
     },
 
     submitAuthentication() {
-      Authentication.authenticate(this, this.form.credentials, "/", this.$refs.myModalRef);
-      console.log(Authentication.user.authenticated)
-      // if ()
+      Authentication.authenticate(
+        this,
+        this.form.credentials,
+        "/",
+        this.$refs.myModalRef
+      );
     },
 
     submitSignUp() {
       Authentication.signup(this, this.form.newUser, "/");
     },
 
-    countDownChanged (dismissCountDown) {
-      this.dismissCountDown = dismissCountDown
-    },
-    // onSubmit(evt) {
-    //   evt.preventDefault();
-    //   alert(JSON.stringify(this.form));
-    // },
-    // onReset(evt) {
-    //   evt.preventDefault();
-    //   /* Reset our form values */
-    //   this.form.password = "";
-    //   this.form.name = "";
-    //   /* Trick to reset/clear native browser form validation state */
-    //   this.show = false;
-    //   this.$nextTick(() => {
-    //     this.show = true;
-    //   });
-    // }
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    }
   }
 };
 </script>
@@ -177,6 +174,7 @@ export default {
 @import "../../assets/styles.scss";
 // .navbar {background: #94b0b7 !important;}
 // .form-control-sm,.btn-sm {border-radius: 0rem;}
+.buttons-wrap{display: flex; justify-content: space-between;}
 </style>
 
 
