@@ -1,5 +1,7 @@
 import Axios from 'axios'
-import { Observable } from 'rxjs';
+import {
+  Observable
+} from 'rxjs';
 const BudgetManagerAPI = `http://${window.location.hostname}:3001`
 
 export default {
@@ -22,20 +24,21 @@ export default {
       next: (data) => {
         console.log('[data] => ', data);
         context.$cookie.set('token', data.token, '1D')
+        context.$cookie.set('user_id', data.user._id, '1D')
         context.validLogin = true
         this.user.authenticated = true
         if (data.success) {
           context.$refs.myModalRef.hide();
+          context.$emit('updateCurrenUserName', data.user.username);
+          context.$emit('updateLoginButton', 'Кабінет');
           context.wrongCredentialAlert = '';
           context.messegeAlert = data.message
           context.dismissCountDown = context.dismissSecs
-          context.currentUserName = data.user.username
         }
       },
       error: (err) => {
         console.log(err)
-        context.wrongCredentialAlert = 'Не вірно сказано логін або пароль'
-        context.dismissCountDown = context.dismissSecs
+        context.wrongCredentialAlert = 'Не вірно вказано логін або пароль'
       },
       complete: (data) => {
         console.log('[complete]', data);
@@ -77,6 +80,18 @@ export default {
         console.log('[complete]');
       }
     });
+  },
+
+  signout(context, redirect) {
+    context.$cookie.delete('token')
+    context.$cookie.delete('user_id')
+    this.user.authenticated = false
+
+    if (redirect) {
+      context.$router.push(redirect)
+      context.currentUserName = '';
+      context.loginBtn = 'Логін';
+    }
   },
 
   checkAuthentication() {

@@ -111,6 +111,7 @@
 
 <script>
 import testData from "../../utilities/testData.js";
+import Data from './index.js'
 export default {
   components: {},
   data() {
@@ -157,6 +158,9 @@ export default {
     };
   },
   methods: {
+    getAllItems() {
+      Data.getAllItems(this)
+    },
     addItem(element) {
       this.tabItems.push({
         id: element.id,
@@ -255,7 +259,7 @@ export default {
     this.categoryList = testData.category.filter(el => {
       return el.parentId == "";
     });
-    this.itemsList = testData.items;
+    this.getAllItems();
   },
   computed: {
     total: function() {
